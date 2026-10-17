@@ -1,4 +1,4 @@
-﻿/* =============================================
+/* =============================================
    MATHSPEED – APP.JS
    ============================================= */
 
@@ -255,18 +255,79 @@ function endGame(reason) {
   const wrongCount = state.answers.filter(a => !a.isCorrect).length;
   const avgSpeed   = state.correct > 0 ? (usedTime / Math.max(state.current, state.correct)).toFixed(1) : "--";
 
-  // Trophy & title
+  // Trophy, title & motivational messages for Mari 💜
   const pct = state.correct / TOTAL_Q;
-  let trophy = "🏆", title = "", sub = "";
-  if (pct >= .95)      { trophy="🏆"; title="Matematico Experto!"; }
-  else if (pct >= .8)  { trophy="⭐"; title="Excelente resultado!"; }
-  else if (pct >= .6)  { trophy="👍"; title="Buen trabajo!"; }
-  else if (pct >= .4)  { trophy="💪"; title="Sigue practicando!"; }
-  else                 { trophy="🔥"; title="Intenta de nuevo!"; }
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
-  sub = reason === "timeout"
+  const motivations = {
+    perfect: {
+      trophy: "🏆",
+      titles: ["Perfecta, Mari!", "Eres una crack, Mari!", "Imparable, Mari!"],
+      msgs: [
+        "💜 Perfecto! Eres la mas inteligente que conozco. Te amo.",
+        "✨ 20 de 20! Tu cerebro es tan increible como tu. Orgullo total!",
+        "🌟 Flawless! Nadie como tu, Mari. Te adoro con todo."
+      ]
+    },
+    excellent: {
+      trophy: "⭐",
+      titles: ["Excelente, Mari!", "Que inteligente eres!", "Brillante, Mari!"],
+      msgs: [
+        "💜 Que resultado tan bonito! Cada dia me sorprendes mas. Te amo.",
+        "🥰 Wow! Eres demasiado lista. Estoy muy orgulloso de ti.",
+        "✨ Casi perfecta! Como tu. Sigue asi, te amo muchisimo."
+      ]
+    },
+    good: {
+      trophy: "💜",
+      titles: ["Muy bien, Mari!", "Buen trabajo!", "Vas muy bien, Mari!"],
+      msgs: [
+        "💪 Eso es! Cada intento te hace mas fuerte. Te amo, Mari.",
+        "🌸 Gran esfuerzo! Lo que mas me gusta de ti es que nunca te rindes. Te adoro.",
+        "💜 Bien hecho! La practica hace al maestro... o a la maestra! Te amo."
+      ]
+    },
+    keep_going: {
+      trophy: "🌸",
+      titles: ["Animo, Mari!", "Tu puedes, Mari!", "Sigue intentando!"],
+      msgs: [
+        "💜 No te rindas! Cada error es un paso mas cerca de lograrlo. Te amo.",
+        "🔥 El camino es practicar, y ya lo estas haciendo! Orgullo de ti, Mari.",
+        "🌸 Recuerda que te quiero sin importar el resultado. Vuelve a intentarlo!"
+      ]
+    },
+    retry: {
+      trophy: "💪",
+      titles: ["Vamos Mari, tu puedes!", "Un intento mas!", "No te rindas!"],
+      msgs: [
+        "🔥 Esta es tu motivacion del dia: eres increible y lo lograras. Te amo, Mari.",
+        "💜 Los grandes campeones fallan antes de ganar. Tu momento llega. Te adoro.",
+        "✨ Intenta de nuevo! Yo creo en ti mas que nadie. Con amor."
+      ]
+    }
+  };
+
+  let tier;
+  if (pct >= 1)        tier = motivations.perfect;
+  else if (pct >= .8)  tier = motivations.excellent;
+  else if (pct >= .6)  tier = motivations.good;
+  else if (pct >= .4)  tier = motivations.keep_going;
+  else                 tier = motivations.retry;
+
+  const trophy = tier.trophy;
+  const title  = pick(tier.titles);
+  const motivMsg = pick(tier.msgs);
+
+  const sub = reason === "timeout"
     ? `Se acabo el tiempo. Respondiste ${state.answers.filter(a=>!a.skipped).length} de ${TOTAL_Q} preguntas.`
-    : `Completaste los ${TOTAL_Q} ejercicios.`;
+    : `Completaste los ${TOTAL_Q} ejercicios, Mari!`;
+
+  // Show motivation banner
+  const motivEl = id("motiv-msg");
+  if (motivEl) {
+    motivEl.textContent = motivMsg;
+    motivEl.style.display = "block";
+  }
 
   id("result-trophy").textContent = trophy;
   id("result-title").textContent  = title;
