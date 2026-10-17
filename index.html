@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MathSpeed – Agilidad Mental</title>
+  <meta name="description" content="Practica tu agilidad mental con operaciones matematicas basicas. Resuelve 20 ejercicios contra el reloj!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- PANTALLA: INICIO -->
+  <div id="screen-start" class="screen active">
+    <div class="stars"></div>
+    <div class="card glass hero-card">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <h1>MathSpeed</h1>
+      </div>
+      <p class="subtitle">Entrena tu mente con operaciones basicas.<br/>20 ejercicios. El reloj corre. Estas listo?</p>
+
+      <div class="config-section">
+        <label class="config-label">Tiempo limite</label>
+        <div class="time-options">
+          <button class="time-btn active" data-time="60">1 min</button>
+          <button class="time-btn" data-time="90">1:30 min</button>
+          <button class="time-btn" data-time="120">2 min</button>
+          <button class="time-btn" data-time="180">3 min</button>
+        </div>
+
+        <label class="config-label" style="margin-top:20px;">Operaciones</label>
+        <div class="ops-options">
+          <label class="op-toggle">
+            <input type="checkbox" id="op-add" checked /> <span>+ Suma</span>
+          </label>
+          <label class="op-toggle">
+            <input type="checkbox" id="op-sub" checked /> <span>- Resta</span>
+          </label>
+          <label class="op-toggle">
+            <input type="checkbox" id="op-mul" checked /> <span>x Multiplicacion</span>
+          </label>
+          <label class="op-toggle">
+            <input type="checkbox" id="op-div" /> <span>/ Division</span>
+          </label>
+        </div>
+
+        <label class="config-label" style="margin-top:20px;">Dificultad</label>
+        <div class="time-options">
+          <button class="diff-btn active" data-diff="easy">Facil</button>
+          <button class="diff-btn" data-diff="medium">Medio</button>
+          <button class="diff-btn" data-diff="hard">Dificil</button>
+        </div>
+      </div>
+
+      <button id="btn-start" class="btn-primary pulse">
+        <span>Comenzar!</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PANTALLA: JUEGO -->
+  <div id="screen-game" class="screen">
+    <div class="stars"></div>
+    <div class="game-layout">
+      <div class="hud glass">
+        <div class="hud-item">
+          <span class="hud-label">Progreso</span>
+          <span class="hud-value" id="hud-progress">1 / 20</span>
+        </div>
+        <div class="timer-wrap">
+          <svg class="timer-ring" viewBox="0 0 100 100">
+            <circle class="ring-bg" cx="50" cy="50" r="42"/>
+            <circle class="ring-fill" id="ring-fill" cx="50" cy="50" r="42"/>
+          </svg>
+          <span id="timer-display" class="timer-text">60</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Correctas</span>
+          <span class="hud-value" id="hud-correct">0</span>
+        </div>
+      </div>
+
+      <div class="question-card glass" id="question-card">
+        <div class="question-num" id="question-num">Pregunta 1</div>
+        <div class="question-text" id="question-text">12 + 7 = ?</div>
+        <div class="feedback-icon" id="feedback-icon"></div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="answer-section glass">
+        <input type="number" id="answer-input" class="answer-input" placeholder="Tu respuesta..." autocomplete="off" inputmode="numeric" />
+        <button id="btn-submit" class="btn-submit">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+
+      <div class="mini-history" id="mini-history"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA: RESULTADO -->
+  <div id="screen-result" class="screen">
+    <div class="stars"></div>
+    <div class="card glass result-card">
+      <div class="result-trophy" id="result-trophy">🏆</div>
+      <h2 class="result-title" id="result-title">Excelente!</h2>
+      <p class="result-sub" id="result-sub">Terminaste los 20 ejercicios</p>
+
+      <div class="score-ring-wrap">
+        <svg class="score-ring" viewBox="0 0 140 140">
+          <circle class="score-ring-bg" cx="70" cy="70" r="58"/>
+          <circle class="score-ring-fill" id="score-ring-fill" cx="70" cy="70" r="58"/>
+        </svg>
+        <div class="score-center">
+          <span class="score-num" id="score-num">18</span>
+          <span class="score-denom">/20</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-icon">✅</span>
+          <span class="stat-val" id="stat-correct">18</span>
+          <span class="stat-label">Correctas</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">❌</span>
+          <span class="stat-val" id="stat-wrong">2</span>
+          <span class="stat-label">Incorrectas</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">⏱️</span>
+          <span class="stat-val" id="stat-time">45s</span>
+          <span class="stat-label">Tiempo usado</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">⚡</span>
+          <span class="stat-val" id="stat-speed">2.5s</span>
+          <span class="stat-label">Prom. por pregunta</span>
+        </div>
+      </div>
+
+      <div id="errors-section" class="errors-section">
+        <h3 class="errors-title">Revision de respuestas</h3>
+        <div id="errors-list" class="errors-list"></div>
+      </div>
+
+      <div class="result-actions">
+        <button id="btn-retry" class="btn-primary">
+          <span>Intentar de nuevo</span>
+          <span class="btn-glow"></span>
+        </button>
+        <button id="btn-home" class="btn-secondary">Inicio</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
